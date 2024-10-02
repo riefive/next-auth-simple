@@ -18,10 +18,19 @@ export const authConfig = {
       return true;
     },
     redirect: async ({ url, baseUrl }) => {
-      if (url.startsWith("/")) return `${baseUrl}${url}`
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
-    }
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
+    session: ({ session, token }) => {
+      if (session.user) {
+        return {
+          ...session,
+          user: { ...session.user, ...token },
+        };
+      }
+      return session;
+    },
   },
   providers: [], // Add providers with an empty array for now
 } as NextAuthConfig;
