@@ -4,8 +4,9 @@ export const authConfig = {
   pages: {
     signIn: "/login",
   },
+  secret: process.env.AUTH_SECRET,
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized: ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
       if (isOnDashboard) {
@@ -16,6 +17,11 @@ export const authConfig = {
       }
       return true;
     },
+    redirect: async ({ url, baseUrl }) => {
+      if (url.startsWith("/")) return `${baseUrl}${url}`
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    }
   },
   providers: [], // Add providers with an empty array for now
 } as NextAuthConfig;
