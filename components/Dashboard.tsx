@@ -1,14 +1,19 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
-const handleSignOut = async () => {
-  await signOut();
-};
-
 const Dashboard = () => {
+  const router = useRouter();
   const { data: session, status } = useSession();
+
+  const handleSignOut = async () => {
+    await signOut({
+      redirect: true,
+      callbackUrl: "/login",
+    });
+  };
 
   useEffect(() => {
     if (status === "loading") return;

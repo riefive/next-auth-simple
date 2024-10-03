@@ -1,15 +1,31 @@
 "use client";
 
-import React from "react";
-import { useFormState } from "react-dom";
-import { authForAuthenticate } from "@/libs/auth.action";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
-  const [errorMessage, formAction, isPending] = useFormState(authForAuthenticate, undefined);
+  const router = useRouter();
+  const [model, setModel] = useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const onSubmit = async (e: React.FormEvent<any>) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    let options = {
+      email: model.email,
+      password: model.password,
+      redirect: false,
+    };
+    const res: any = await signIn("credentials", options);
+    if (parseInt(res?.status || 0) === 200 || res?.ok) {
+      router.push("/dashboard");
+    }
+  };
 
   return (
     <>
-      <form action={formAction} className="flex flex-col w-[50%] mx-auto gap-2">
+      <form className="flex flex-col w-[50%] mx-auto gap-2">
         <div>
           <label className="mb-3 mt-5 block text-md font-medium text-gray-900" htmlFor="email">
             Email
@@ -22,6 +38,8 @@ export default function Login() {
               name="email"
               placeholder="Enter your email address"
               required
+              value={model.email}
+              onChange={({ target }) => setModel({ ...model, email: target.value })}
             />
           </div>
           <div className="mt-4">
@@ -37,13 +55,16 @@ export default function Login() {
                 placeholder="Enter password"
                 required
                 minLength={6}
+                value={model.password}
+                onChange={({ target }) => setModel({ ...model, password: target.value })}
               />
             </div>
           </div>
           <div className="text-center w-full mt-4">
             <button
-              type="submit"
+              type="button"
               className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:p-2 md:px-3"
+              onClick={onSubmit}
             >
               <div className="">Log In</div>
             </button>
