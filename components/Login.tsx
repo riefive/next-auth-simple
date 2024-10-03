@@ -2,23 +2,23 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, SignInResponse } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter();
   const [model, setModel] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const onSubmit = async (e: React.FormEvent<any>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     setErrorMessage(null);
-    let options = {
+    const options = {
       email: model.email,
       password: model.password,
       redirect: false,
     };
-    const res: any = await signIn("credentials", options);
-    if (parseInt(res?.status || 0) === 200 || res?.ok) {
+    const res: SignInResponse = await signIn("credentials", options) as SignInResponse;
+    if (res.status === 200 || res?.ok) {
       router.push("/dashboard");
     }
   };

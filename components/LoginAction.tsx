@@ -5,7 +5,7 @@ import { useFormState } from "react-dom";
 import { authForAuthenticate } from "@/libs/auth.action";
 
 export default function LoginAction() {
-  const [errorMessage, formAction, isPending] = useFormState(authForAuthenticate, undefined);
+  const [errorMessage, formAction] = useFormState(authForAuthenticate, undefined);
 
   return (
     <>

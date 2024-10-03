@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 
 const Dashboard = () => {
-  const router = useRouter();
   const { data: session, status } = useSession();
 
   const handleSignOut = async () => {
@@ -18,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (status === "loading") return;
     console.log(session);
-  }, [status]);
+  }, [status]); // eslint-disable-line
 
   return (
     <div className="flex flex-col w-[50%] gap-2 mx-auto p-2">
