@@ -1,23 +1,8 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
+import { getValidSubdomain } from "./libs/subdomain";
 import { authConfig } from "./auth.config";
 
 const PUBLIC_FILE = /\.(.*)$/;
-
-const getValidSubdomain = (host?: string | null) => {
-  let subdomain: string | null = null;
-  if (!host && typeof window !== "undefined") {
-    // On client side, get the host from window
-    host = window.location.host;
-  }
-  if (host && host.includes(".")) {
-    const candidate = host.split(".")[0];
-    if (candidate && !candidate.includes("localhost")) {
-      // Valid candidate
-      subdomain = candidate;
-    }
-  }
-  return subdomain;
-};
 
 // export default NextAuth(authConfig).auth;
 
